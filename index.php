@@ -1,5 +1,5 @@
 <?php
-echo "Welcome to Tokoshop!";
+// echo "Welcome to Tokoshop!";
 
 require_once "config.php";
 

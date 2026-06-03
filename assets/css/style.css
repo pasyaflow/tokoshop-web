@@ -27,3 +27,11 @@ h1 {
     height: 150px;
     object-fit: cover;
 }
+
+.product-detail {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
