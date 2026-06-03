@@ -27,7 +27,9 @@ $res = $con->query($sql);
                 <a href="products.php?id=<?php echo $row['id']; ?>">
                     <button>View</button>
                 </a>
-                <button>Add to Cart</button>
+                <a href="add_to_cart.php?if=<?php echo $row['id']; ?>">
+                    <button>Add to Cart</button>           
+                </a>
             </div>
         <?php endwhile; ?>
     </div>

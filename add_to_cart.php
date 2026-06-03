@@ -6,6 +6,7 @@ if (!$id) {
     exit;
 }
 
+// This will fetch the product from the db.
 $sql = "SELECT * FROM products WHERE id = $id";
 $res = $con->query($sql);
 
@@ -15,10 +16,12 @@ if ($res->num_rows==0) {
 
 $product = $res->fetch_assoc();
 
+// Checking if it's not exist
 if(!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
+// Then, this one will increase the quantity if the product is already inside cart.
 if (isset($_SESSION['cart'][$id])) {
     $_SESSION['cart'][$id]['quantity']++;
 } else {

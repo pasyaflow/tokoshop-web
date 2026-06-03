@@ -31,7 +31,9 @@ $product = $res->fetch_assoc();
         <h1><?php echo $product['prod_name']; ?></h1>
         <h3>PHP <?php echo $product['prod_price'] ?></h3>
         <p><?php echo $product['prod_desc'] ?></p>
-        <button>Add to Cart</button>
+        <a href="add_to_cart.php?id=<?php echo $product['id']; ?>">
+            <button>Add to Cart</button>
+        </a>
         <br><br>
         <a href="index.php"> Back to Homepage</a>
     </div>
