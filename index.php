@@ -3,6 +3,9 @@
 
 require_once "config.php";
 
+include "header.php";
+include_once "assets/components/icon_button.php";
+
 $sql = "SELECT * FROM products ORDER BY created_at DESC";
 $res = $con->query($sql);
 ?>
@@ -13,25 +16,33 @@ $res = $con->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
-    <title>Tokoshop - Belanja Aja di Toko Kami</title>
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Tokoshop - Make Shopping Experience Fun</title>
 </head>
 <body>
-    <h1>Tokoshop</h1>
-    <div class="product-container">
-        <?php while($row = $res->fetch_assoc()): ?>
-            <div class="product-card">
-                <img src="assets/images/<?php echo $row['prod_img']; ?>" alt="">
-                <h2><?php echo $row['prod_name']; ?></h2>
-                <p>PHP <?php echo $row['prod_price']; ?></p>
-                <p><?php echo $row['prod_desc']; ?></p>
-                <a href="products.php?id=<?php echo $row['id']; ?>">
-                    <button>View</button>
-                </a>
-                <a href="add_to_cart.php?if=<?php echo $row['id']; ?>">
-                    <button>Add to Cart</button>           
-                </a>
-            </div>
-        <?php endwhile; ?>
+    <div class="container">
+        <div class="product-container">
+            <?php while($row = $res->fetch_assoc()): ?>
+                <div class="product-card">
+                    <a href="products.php?id=<?php echo $row['id']; ?>" class="product-link">
+                        <img src="assets/images/<?php echo $row['prod_img']; ?>" alt="">
+                        <h2><?php echo $row['prod_name']; ?></h2>
+                    </a>
+                    <p>PHP <?php echo number_format($row['prod_price'], 2); ?></p>
+                    <div class="product-actions">
+                        <a href="add_to_cart.php?id=<?php echo $row['id']; ?>" class="btn-cart-link">
+                            <?php iconButton("Add to Cart", "shopping-cart", "#111111", "#ffffff"); ?>
+                        </a>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
     </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

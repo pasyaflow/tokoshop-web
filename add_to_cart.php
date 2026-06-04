@@ -1,4 +1,8 @@
 <?php
+session_start();
+
+require_once "config.php";
+
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
