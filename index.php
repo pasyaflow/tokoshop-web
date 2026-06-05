@@ -5,6 +5,7 @@ require_once "config.php";
 
 include "header.php";
 include_once "assets/components/icon_button.php";
+include_once "assets/components/toast_notif.php";
 
 $sql = "SELECT * FROM products ORDER BY created_at DESC";
 $res = $con->query($sql);
@@ -32,17 +33,60 @@ $res = $con->query($sql);
                     </a>
                     <p>PHP <?php echo number_format($row['prod_price'], 2); ?></p>
                     <div class="product-actions">
-                        <a href="add_to_cart.php?id=<?php echo $row['id']; ?>" class="btn-cart-link">
-                            <?php iconButton("Add to Cart", "shopping-cart", "#111111", "#ffffff"); ?>
-                        </a>
+                        <a href="#" class="btn-cart-link" data-id="<?php echo $row['id']; ?>">
+							<?php iconButton("Add to Cart", "shopping-cart", "#111111", "#ffffff"); ?>
+						</a>
                     </div>
                 </div>
             <?php endwhile; ?>
         </div>
     </div>
 
+    <?php toastNotification(); ?>
+
     <script>
-        lucide.createIcons();
+    lucide.createIcons();
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-cart-link').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                
+                const productId = this.getAttribute('data-id'); 
+                if(!productId) return;
+
+                fetch(`add_to_cart.php?id=${productId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const toastMessage = document.getElementById('toast-message');
+                            if(toastMessage) {
+                                toastMessage.innerText = data.message;
+                            }
+                            
+                            const toast = document.getElementById('toast-notification');
+                            if(toast) {
+                                toast.classList.add('show');
+                                
+                                setTimeout(() => {
+                                    toast.classList.remove('show');
+                                }, 3000);
+                            }
+                            
+                            const cartBadge = document.querySelector('.cart-count');
+                            if(cartBadge) {
+                                cartBadge.innerText = data.cartCount;
+                            }
+                        }
+                    })
+                    .catch(err => console.error("Error adding to cart:", err));
+            });
+        });
+    });
+    </script>
+
+    <?php include "footer.php"; ?>
 </body>
 </html>

@@ -1,21 +1,42 @@
 <?php
 session_start();
 
+header('Content-Type: application/json');
+
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
 require_once "config.php";
 
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
-    header("Location: index.php");
+    echo json_encode([
+        "success" => false,
+        "message" => "Missing product ID."
+    ]);
     exit;
 }
 
 // This will fetch the product from the db.
-$sql = "SELECT * FROM products WHERE id = $id";
+if (!isset($con) || $con->connect_error) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Database connection failed."
+    ]);
+    exit;
+}
+
+$id = intval($id);
+$sql = "SELECT prod_name, prod_price, prod_img FROM products WHERE id = $id";
 $res = $con->query($sql);
 
-if ($res->num_rows==0) {
-    die("Product not found.");
+if (!$res || $res->num_rows == 0) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Product not found in database."
+    ]);
+    exit;
 }
 
 $product = $res->fetch_assoc();
@@ -37,7 +58,16 @@ if (isset($_SESSION['cart'][$id])) {
     ];
 }
 
-header("Location: cart.php");
-exit;
+$totalItems = 0;
+foreach ($_SESSION['cart'] as $item) {
+    $totalItems += $item['quantity'];
+}
 
+echo json_encode([
+    "success" => true,
+    "message" => $product['prod_name'] . " added to cart!",
+    "cartCount" => $totalItems
+]);
+
+exit;
 ?>
