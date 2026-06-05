@@ -1,6 +1,8 @@
 <?php
 require_once "config.php";
 
+include_once "assets/components/icon_button.php";
+
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
